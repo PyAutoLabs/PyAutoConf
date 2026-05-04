@@ -1,7 +1,7 @@
 # MANIFEST.in
 exclude .gitignore
 include LICENSE
-include README.rst
+include README.md
 prune .git
 prune build
 prune dist
