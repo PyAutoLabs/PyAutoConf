@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 os.environ['XLA_FLAGS'] = "--xla_disable_hlo_passes=constant_folding"
 
 logger = logging.getLogger(__name__)
@@ -103,8 +104,8 @@ def _colab_setup(
     os.chdir(workspace_dir)
 
     conf.instance.push(
-        new_path=os.path.join(workspace_dir, "config"),
-        output_path=os.path.join(workspace_dir, "output"),
+        new_path=Path(workspace_dir) / "config",
+        output_path=Path(workspace_dir) / "output",
     )
 
     print(

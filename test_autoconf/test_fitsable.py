@@ -3,20 +3,19 @@ import pytest
 from astropy.io import fits
 import numpy as np
 import os
-from os import path
+from pathlib import Path
 
 from autoconf import conf
 from autoconf import fitsable
 
-test_path = "{}".format(path.dirname(path.realpath(__file__)))
+test_path = Path(__file__).resolve().parent
 
-test_data_path = os.path.join(
-    "{}".format(os.path.dirname(os.path.realpath(__file__))), "files"
-)
+test_data_path = Path(__file__).resolve().parent / "files"
 
 
 def create_fits(fits_path, array):
-    if path.exists(fits_path):
+    fits_path = Path(fits_path)
+    if fits_path.exists():
         os.remove(fits_path)
 
     hdu_list = fits.HDUList()
@@ -29,22 +28,22 @@ def create_fits(fits_path, array):
 
 def test__ndarray_via_fits_from():
     arr = fitsable.ndarray_via_fits_from(
-        file_path=os.path.join(test_data_path, "3x3_ones.fits"), hdu=0
+        file_path=test_data_path / "3x3_ones.fits", hdu=0
     )
 
     assert (arr == np.ones((3, 3))).all()
 
     arr = fitsable.ndarray_via_fits_from(
-        file_path=os.path.join(test_data_path, "4x3_ones.fits"), hdu=0
+        file_path=test_data_path / "4x3_ones.fits", hdu=0
     )
 
     assert (arr == np.ones((4, 3))).all()
 
 
 def test__output_to_fits():
-    file_path = os.path.join(test_data_path, "array_out.fits")
+    file_path = test_data_path / "array_out.fits"
 
-    if os.path.exists(file_path):
+    if file_path.exists():
         os.remove(file_path)
 
     arr = np.array([[10.0, 30.0, 40.0], [92.0, 19.0, 20.0]])
@@ -57,9 +56,9 @@ def test__output_to_fits():
 
 
 def test__output_to_fits__header_dict():
-    file_path = os.path.join(test_data_path, "array_out.fits")
+    file_path = test_data_path / "array_out.fits"
 
-    if os.path.exists(file_path):
+    if file_path.exists():
         os.remove(file_path)
 
     arr = np.array([[10.0, 30.0, 40.0], [92.0, 19.0, 20.0]])
@@ -73,7 +72,7 @@ def test__output_to_fits__header_dict():
 
 def test__header_obj_from():
     header_obj = fitsable.header_obj_from(
-        file_path=os.path.join(test_data_path, "3x3_ones.fits"), hdu=0
+        file_path=test_data_path / "3x3_ones.fits", hdu=0
     )
 
     assert isinstance(header_obj, fits.header.Header)

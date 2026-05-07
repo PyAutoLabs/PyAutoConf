@@ -2,7 +2,6 @@ import inspect
 import json
 import logging
 import os
-from os import path
 from importlib import util
 from pathlib import Path
 
@@ -51,9 +50,9 @@ def generate(directory: str):
     directory
         The directory for which prior are generated
     """
-    cwd = Path(os.getcwd())
+    cwd = Path.cwd()
     try:
-        os.mkdir(path.join(cwd, "priors"))
+        (cwd / "priors").mkdir()
     except FileExistsError:
         pass
     for directory, _, files in os.walk(directory):
@@ -64,7 +63,7 @@ def generate(directory: str):
                 spec = for_file(full_path)
                 config_path = cwd / "priors" / file.replace(".py", ".json")
                 if len(spec) > 0:
-                    if os.path.exists(config_path):
+                    if config_path.exists():
                         logger.info(f"{config_path} already exists")
                         continue
                     with open(config_path, "w+") as f:
