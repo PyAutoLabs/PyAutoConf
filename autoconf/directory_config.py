@@ -174,7 +174,7 @@ class RecursiveConfig(AbstractConfig):
                     [
                         path != "priors",
                         len(path.split(".")[0]) != 0,
-                        os.path.isdir(f"{self.path}/{path}")
+                        (self.path / path).is_dir()
                         or path.endswith(".ini")
                         or path.endswith(".yaml")
                         or path.endswith(".yml"),
@@ -204,7 +204,7 @@ class RecursiveConfig(AbstractConfig):
         yaml_name = f"{item}.yaml"
         if yaml_name in listing:
             return YAMLConfig(self.path / yaml_name)
-        if item in listing and os.path.isdir(self.path / item):
+        if item in listing and (self.path / item).is_dir():
             return RecursiveConfig(self.path / item)
         raise KeyError(f"No configuration found for {item} at path {self.path}")
 

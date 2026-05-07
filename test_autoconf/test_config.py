@@ -1,6 +1,6 @@
 import os
 import shutil
-from os import path
+from pathlib import Path
 
 import pytest
 
@@ -9,7 +9,7 @@ from autoconf.directory_config import NamedConfig
 from autoconf.mock.mock_real import EllProfile, Gaussian
 from autoconf.exc import ConfigException
 
-directory = path.dirname(path.realpath(__file__))
+directory = Path(__file__).resolve().parent
 
 
 class MockClass:
