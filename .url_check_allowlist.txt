@@ -1,0 +1,13 @@
+# Known broken URLs grandfathered for url_check_live.sh.
+# Format: one URL per line. Lines starting with '#' and blank lines are ignored.
+# Sample location follows each URL as a trailing comment.
+#
+# This file is referenced by .github/workflows/url_check.yml (weekly cron).
+# url_check_live.sh fails CI when a URL is broken AND not in this file.
+# To accept new breakage: append the URL here. To force a fix: leave it out.
+
+# Code of Conduct boilerplate
+http://geekfeminism.wikia.com/wiki/Conference_anti-harassment/Policy  # CODE_OF_CONDUCT.md:305
+
+# Internal PyAuto docs — pages renamed, need editorial fix
+https://pyautofit.readthedocs.io/en/latest/general/adding_a_model_component.html  # autoconf/directory_config.py:235
