@@ -159,7 +159,7 @@ def for_autogalaxy(raise_error_if_not_gpu: bool = True) -> None:
 
     _colab_setup(
         project_name="PyAutoGalaxy",
-        workspace_repo="https://github.com/Jammy2211/autogalaxy_workspace",
+        workspace_repo="https://github.com/PyAutoLabs/autogalaxy_workspace",
         workspace_dir="/content/autogalaxy_workspace",
         packages=packages,
         raise_error_if_not_gpu=raise_error_if_not_gpu,
@@ -205,7 +205,7 @@ def for_autolens(raise_error_if_not_gpu: bool = True) -> None:
 
     _colab_setup(
         project_name="PyAutoLens",
-        workspace_repo="https://github.com/Jammy2211/autolens_workspace",
+        workspace_repo="https://github.com/PyAutoLabs/autolens_workspace",
         workspace_dir="/content/autolens_workspace",
         packages=packages,
         raise_error_if_not_gpu=raise_error_if_not_gpu,
