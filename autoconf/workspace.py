@@ -57,14 +57,58 @@ def _missing_version_warning(workspace_root, library_version):
     )
 
 
+def _parse_version(version_string):
+    try:
+        return tuple(int(part) for part in version_string.split("."))
+    except (AttributeError, ValueError):
+        return None
+
+
+def _library_name_from_workspace(workspace_root):
+    name = workspace_root.name
+    suffix = "_workspace"
+    if name.endswith(suffix) and len(name) > len(suffix):
+        return name[: -len(suffix)]
+    return None
+
+
+def _update_library_block(library_name, target_version):
+    package = library_name if library_name else "<library>"
+    return (
+        f"Your workspace is newer than your installed library. Update the "
+        f"library to match:\n\n"
+        f"    pip install --upgrade {package}=={target_version}"
+    )
+
+
+def _update_workspace_block(workspace_root):
+    return (
+        f"Your installed library is newer than your workspace clone. Pull "
+        f"the latest workspace `main`:\n\n"
+        f"    cd {workspace_root} && git pull origin main"
+    )
+
+
 def _mismatch_message(workspace_version, library_version, workspace_root):
+    library_name = _library_name_from_workspace(workspace_root)
+    ws_parsed = _parse_version(workspace_version)
+    lib_parsed = _parse_version(library_version)
+
+    if ws_parsed is not None and lib_parsed is not None and ws_parsed > lib_parsed:
+        advice = _update_library_block(library_name, workspace_version)
+    elif ws_parsed is not None and lib_parsed is not None and lib_parsed > ws_parsed:
+        advice = _update_workspace_block(workspace_root)
+    else:
+        advice = (
+            f"{_update_library_block(library_name, workspace_version)}\n\n"
+            f"Or, if your workspace is the side that is out of date:\n\n"
+            f"{_update_workspace_block(workspace_root)}"
+        )
+
     return (
         f"Workspace version ({workspace_version}) at {workspace_root} does "
         f"not match the installed library version ({library_version}).\n\n"
-        f"This usually means your installed library was upgraded but your "
-        f"workspace clone is from an older release tag. Re-clone the "
-        f"workspace at the matching tag:\n\n"
-        f"    git clone --branch {library_version} <workspace-repo-url>\n\n"
+        f"{advice}\n\n"
         f"To bypass this check, edit config/general.yaml:\n\n"
         f"    version:\n"
         f"      workspace_version_check: False\n\n"
