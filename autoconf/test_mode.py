@@ -48,3 +48,16 @@ def skip_checks():
     inversion position exceptions, sample weight thresholds.
     """
     return os.environ.get("PYAUTO_SKIP_CHECKS", "0") == "1"
+
+
+def skip_latents():
+    """
+    Return True if latent variable computation should be skipped.
+
+    Auto-enabled when any ``PYAUTO_TEST_MODE`` level is active (test-mode
+    fits mock the underlying samples, so latent values are not meaningful)
+    and can also be triggered independently via ``PYAUTO_SKIP_LATENTS=1``
+    for real-mode fits where the user wants to bypass the post-fit
+    ``compute_latent_samples`` pass.
+    """
+    return is_test_mode() or os.environ.get("PYAUTO_SKIP_LATENTS", "0") == "1"
