@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 
 def test_mode_level():
@@ -61,3 +62,32 @@ def skip_latents():
     ``compute_latent_samples`` pass.
     """
     return is_test_mode() or os.environ.get("PYAUTO_SKIP_LATENTS", "0") == "1"
+
+
+def with_test_mode_segment(base: Path) -> Path:
+    """
+    Return ``base`` with a ``test_mode`` segment appended when
+    ``PYAUTO_TEST_MODE`` is active, else return ``base`` unchanged.
+
+    Workspace scripts that compose their own output paths (e.g. the
+    ``guides/results/aggregator/`` tutorials in ``autolens_workspace`` and
+    ``autogalaxy_workspace``) must agree with PyAutoFit's internal
+    ``_test_mode_segment`` (``autofit/non_linear/paths/abstract.py``), which
+    inserts ``output/test_mode/...`` whenever ``PYAUTO_TEST_MODE`` is set.
+    This helper exposes the same namespacing rule so workspace path
+    composition stays consistent without duplicating the env-var check.
+
+    The name avoids a leading ``test_`` so pytest does not try to
+    collect callsites in test modules as test functions.
+
+    Examples
+    --------
+    >>> # PYAUTO_TEST_MODE unset
+    >>> with_test_mode_segment(Path("output")) / "results_folder"
+    PosixPath('output/results_folder')
+
+    >>> # PYAUTO_TEST_MODE=2
+    >>> with_test_mode_segment(Path("output")) / "results_folder"
+    PosixPath('output/test_mode/results_folder')
+    """
+    return base / "test_mode" if is_test_mode() else base
