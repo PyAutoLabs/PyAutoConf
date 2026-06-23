@@ -1,0 +1,15 @@
+# PyAutoConf
+
+> PyAutoConf (package `autoconf`) is the foundational configuration, serialization and I/O layer of the PyAuto ecosystem — layered config with overrides, dict/JSON/FITS serialization, JSON priors, and shared utilities every other library inherits. This file is a signpost: it points you to the right resource by intent — see where it is used, or work on the library itself.
+
+## Where it's used
+
+- PyAutoConf has no standalone workspace or tutorial series; it underpins every other PyAuto library. You meet it in practice through the consumer libraries — [PyAutoFit](https://github.com/PyAutoLabs/PyAutoFit), [PyAutoGalaxy](https://github.com/PyAutoLabs/PyAutoGalaxy), [PyAutoLens](https://github.com/PyAutoLabs/PyAutoLens) — and their workspaces.
+
+## Work on it (contributors / coding agents)
+
+- [AGENTS.md](./AGENTS.md): build, tests, architecture, base-layer config rules, and conventions.
+
+## Ecosystem
+
+- The base layer of the stack: depends on nothing else in the ecosystem; PyAutoArray, PyAutoFit, PyAutoGalaxy and PyAutoLens are all built on it.

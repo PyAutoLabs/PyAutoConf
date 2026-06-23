@@ -22,6 +22,15 @@ on autoconf, so any public-API change here ripples downstream.
 - No `docs/` / RTD site — the package source and `test_autoconf/` are the
   authoritative reference.
 
+## Architecture
+
+- `autoconf/conf.py` — layered config system (`Config` / `conf.instance`).
+- `autoconf/dictable.py` — dict / JSON serialization (`output_to_json` / `from_json`).
+- `autoconf/fitsable.py` — FITS I/O (`output_to_fits` / `ndarray_via_fits_from`).
+- `autoconf/json_prior/` — JSON-based priors.
+- `autoconf/tools/` — shared decorators and helpers.
+- `test_autoconf/` — test suite.
+
 ## Quick commands
 
 ```bash
