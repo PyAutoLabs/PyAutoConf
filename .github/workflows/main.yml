@@ -2,44 +2,12 @@ name: Tests
 
 on: [push, pull_request]
 
+# Unit tests are defined once, centrally, in PyAutoPulse's reusable workflow
+# (Pulse owns all health/readiness checking). This thin caller preserves PR-time
+# gating: the `unittest` job is the required status check on this repo.
 jobs:
   unittest:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ['3.12', '3.13']
-    steps:
-    - name: Checkout PyAutoConf
-      uses: actions/checkout@v2
-      with:
-        path: PyAutoConf
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        pip3 install --upgrade pip
-        pip3 install wheel
-        pip3 install numpy
-        pip3 install pytest==6.2.5 coverage pytest-cov
-        pip install "./PyAutoConf[optional]"
-    - name: Run tests
-      run: |
-        pushd PyAutoConf
-        python3 -m pytest --cov autoconf --cov-report xml:coverage.xml
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-    - name: Slack send
-      if: ${{ failure() }}
-      id: slack
-      uses: slackapi/slack-github-action@v1.21.0
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      with:
-        channel-id: C03S98FEDK2
-        payload: |
-                {
-                  "text": "${{ github.repository }}/${{ github.ref_name }} (Python ${{ matrix.python-version }}) build result: ${{ job.status }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                }
+    uses: PyAutoLabs/PyAutoPulse/.github/workflows/lib-tests.yml@main
+    with:
+      package: autoconf
+    secrets: inherit
