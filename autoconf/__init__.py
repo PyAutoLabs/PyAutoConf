@@ -102,4 +102,4 @@ from .test_mode import test_mode_level, is_test_mode, skip_fit_output, skip_visu
 from .workspace import check_version, WorkspaceVersionMismatchError
 
 
-__version__ = "2026.7.2.647"
+__version__ = "2026.7.3.648"
