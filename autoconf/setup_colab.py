@@ -266,7 +266,11 @@ def _colab_setup(
     )
 
 
-def setup(project: str, raise_error_if_not_gpu: bool = False) -> None:
+def setup(
+    project: str,
+    raise_error_if_not_gpu: bool = False,
+    workspace_dir: str = None,
+) -> None:
     """
     Set up Google Colab for a PyAuto notebook repository.
 
@@ -278,6 +282,11 @@ def setup(project: str, raise_error_if_not_gpu: bool = False) -> None:
     raise_error_if_not_gpu
         If True, raise instead of continuing when Colab has no GPU / TPU
         runtime enabled.
+    workspace_dir
+        Where to clone the workspace. Defaults to the project's Colab
+        directory (``/content/<workspace>``); overridden by CI environments
+        that simulate the Colab bootstrap (e.g. PyAutoHeart's verify_install
+        check F), where ``/content`` is not writable.
     """
     try:
         spec = _PROJECTS[project]
@@ -289,7 +298,7 @@ def setup(project: str, raise_error_if_not_gpu: bool = False) -> None:
     _colab_setup(
         project_name=spec["project_name"],
         workspace_repo=spec["workspace_repo"],
-        workspace_dir=spec["workspace_dir"],
+        workspace_dir=workspace_dir or spec["workspace_dir"],
         packages=spec["packages"],
         top_package=spec["top_package"],
         raise_error_if_not_gpu=raise_error_if_not_gpu,

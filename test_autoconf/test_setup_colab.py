@@ -159,3 +159,18 @@ class TestCloneWorkspace:
                 setup_colab._clone_workspace("repo_url", target, "autolens")
         run.assert_called_once()
         assert "--branch" not in run.call_args[0][0]
+
+
+class TestWorkspaceDirOverride:
+    def test_override_threads_to_colab_setup(self):
+        with mock.patch.object(setup_colab, "_colab_setup") as colab_setup:
+            setup_colab.setup("autolens", workspace_dir="/tmp/sim_ws")
+        assert colab_setup.call_args[1]["workspace_dir"] == "/tmp/sim_ws"
+
+    def test_default_is_the_registry_colab_dir(self):
+        with mock.patch.object(setup_colab, "_colab_setup") as colab_setup:
+            setup_colab.setup("autolens")
+        assert (
+            colab_setup.call_args[1]["workspace_dir"]
+            == "/content/autolens_workspace"
+        )
