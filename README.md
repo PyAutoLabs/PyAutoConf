@@ -1,5 +1,7 @@
 # PyAutoConf
 
+📖 **Full documentation → <https://pyautoscientist.readthedocs.io>** — the whole PyAutoScientist organism, including how to fork and run your own.
+
 **PyAutoConf** (package `autoconf`) is the configuration, serialization, and
 I/O foundation of the [PyAuto](https://github.com/PyAutoLabs) ecosystem. It
 provides a layered configuration system with workspace overrides, dict / JSON /
