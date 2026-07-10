@@ -9,7 +9,9 @@ CSV serialization of arbitrary objects, and FITS I/O.
 autoconf: it supplies their packaged default config, the object-serialization
 used to persist models and results, and shared utilities (`test_mode`,
 `jax_wrapper`). Centralising these here keeps a single, consistent config and
-I/O layer beneath every library.
+I/O layer beneath every library. Within the
+[PyAutoScientist organism](https://pyautoscientist.readthedocs.io) it is the
+Nerves — the layer connecting the workspace's conventions to every library.
 
 ## Install
 
