@@ -16,21 +16,28 @@ elif isinstance(xla_env, str):
 if not xla_env_set:
     logger.info(
         """
-        For fast JAX compile times, the envirment variable XLA_FLAGS must be set to "--xla_disable_hlo_passes=constant_folding",
+        For fast JAX compile times, the envirment variable XLA_FLAGS must include "--xla_disable_hlo_passes=constant_folding",
         which is currently not.
-        
-        In Python, to do this manually, use the code: 
-        
+
+        In Python, to do this manually, use the code:
+
         import os
         os.environ["XLA_FLAGS"] = "--xla_disable_hlo_passes=constant_folding"
-        
-        The environment variable has been set automatically for you now, however if JAX has already been imported, 
-        this change will not take effect and JAX function compiling times may be slow. 
-        
+
+        The environment variable has been set automatically for you now, however if JAX has already been imported,
+        this change will not take effect and JAX function compiling times may be slow.
+
         Therefore, it is recommended to set this environment variable before running your script, e.g. in your terminal.
         """)
 
-    os.environ['XLA_FLAGS'] = "--xla_disable_hlo_passes=constant_folding"
+    # Append rather than overwrite: replacing the value silently discarded any
+    # flags the user or a batch script had set (e.g. --xla_dump_to=...,
+    # --xla_gpu_autotune_level=0), which is indistinguishable from those flags
+    # having no effect.
+    if xla_env:
+        os.environ["XLA_FLAGS"] = f"{xla_env} --xla_disable_hlo_passes=constant_folding"
+    else:
+        os.environ["XLA_FLAGS"] = "--xla_disable_hlo_passes=constant_folding"
 
 jax_enable_x64 = os.environ.get("JAX_ENABLE_X64")
 
@@ -52,6 +59,33 @@ if not jax_enable_x64:
         JAX_ENABLE_X64=true before running your script.
         """
     )
+
+if "JAX_COMPILATION_CACHE_DIR" not in os.environ:
+
+    _cache_root = os.environ.get("XDG_CACHE_HOME") or os.path.join(
+        os.path.expanduser("~"), ".cache"
+    )
+    _cache_dir = os.path.join(_cache_root, "pyauto_jax")
+
+    os.environ["JAX_COMPILATION_CACHE_DIR"] = _cache_dir
+
+    logger.info(
+        f"""
+        The JAX persistent compilation cache has been enabled at {_cache_dir}
+        (JAX_COMPILATION_CACHE_DIR). The first fit of a given model and data shape
+        on this machine compiles its JAX functions, which can take minutes; the
+        compiled code is cached on disk, so later runs (including after restarting
+        Python) skip this cost.
+
+        To use a different location, set JAX_COMPILATION_CACHE_DIR before running
+        your script. To disable the cache entirely, set it to an empty string.
+        """
+    )
+
+# An explicitly empty JAX_COMPILATION_CACHE_DIR means "cache disabled"; do not
+# force a compile-time threshold in that case.
+if os.environ.get("JAX_COMPILATION_CACHE_DIR"):
+    os.environ.setdefault("JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS", "1")
 
 
 def register_pytree_node_class(cls):
