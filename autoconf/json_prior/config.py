@@ -55,6 +55,13 @@ def path_for_class(cls) -> List[str]:
     return f"{cls.__module__}.{cls.__name__}".split(".")
 
 
+# Sentinels for the per-instance lookup cache: a query can legitimately resolve to
+# None, and the class-family probe in for_class_and_suffix_path relies on repeated
+# expected misses, so both found-None and not-found must be cacheable.
+_UNCACHED = object()
+_NOT_FOUND = object()
+
+
 class JSONPriorConfig:
     def __init__(self, config_dict: dict, directory=None):
         """
@@ -79,6 +86,8 @@ class JSONPriorConfig:
         self.obj = config_dict
         self.directory = directory
         self._path_value_map = None
+        self._path_value_tuples = None
+        self._lookup_cache = {}
 
     @property
     def paths(self):
@@ -109,12 +118,18 @@ class JSONPriorConfig:
         """
         Tuple pairs matching every possible path to the configuration it points to.
         These are ordered by key length with the longest key first.
+
+        Cached on the instance — this is consulted for every prior of every model
+        construction, and re-sorting the flattened configuration per lookup
+        dominated model deserialization.
         """
-        return sorted(
-            list(self.path_value_map.items()),
-            key=lambda item: len(item[0]),
-            reverse=True,
-        )
+        if self._path_value_tuples is None:
+            self._path_value_tuples = sorted(
+                list(self.path_value_map.items()),
+                key=lambda item: len(item[0]),
+                reverse=True,
+            )
+        return self._path_value_tuples
 
     @classmethod
     def from_directory(cls, directory: str) -> "JSONPriorConfig":
@@ -209,9 +224,20 @@ class JSONPriorConfig:
             If no configuration is found.
         """
         key = ".".join(config_path)
+        cached = self._lookup_cache.get(key, _UNCACHED)
+        if cached is _NOT_FOUND:
+            raise KeyError(
+                f"No configuration was found for the path {config_path}"
+                + ("" if self.directory is None else f" ({self.directory})")
+            )
+        if cached is not _UNCACHED:
+            return cached
+
         for path, value in self.path_value_tuples:
             if key.endswith(path):
+                self._lookup_cache[key] = value
                 return value
+        self._lookup_cache[key] = _NOT_FOUND
         raise KeyError(
             f"No configuration was found for the path {config_path}"
             + ("" if self.directory is None else f" ({self.directory})")
