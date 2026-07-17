@@ -21,6 +21,30 @@ def is_test_mode():
     return test_mode_level() > 0
 
 
+def test_mode_samples():
+    """
+    Return the number of fake samples the test-mode sampler bypass writes.
+
+    Controlled by ``PYAUTO_TEST_MODE_SAMPLES`` (default 4, the historical
+    bypass sample count — unset behaviour is unchanged). Larger values make
+    a ``PYAUTO_TEST_MODE=2``/``3`` bypass run write a ``samples.csv`` whose
+    row count and byte size are representative of a production sampler run
+    (N ~ 10k-100k), so resume/load timings measured against the output are
+    honest while the fit itself completes in seconds.
+
+    Values below 4 raise: 4 is the minimum that preserves the bypass
+    sample structure downstream code is tested against.
+    """
+    samples = int(os.environ.get("PYAUTO_TEST_MODE_SAMPLES", "4"))
+    if samples < 4:
+        raise ValueError(
+            f"PYAUTO_TEST_MODE_SAMPLES must be >= 4 (got {samples}) — 4 is "
+            f"the minimum that preserves the test-mode bypass sample "
+            f"structure."
+        )
+    return samples
+
+
 def skip_fit_output():
     """
     Return True if fit I/O should be skipped.
