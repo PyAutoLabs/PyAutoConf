@@ -39,6 +39,25 @@ if not xla_env_set:
     else:
         os.environ["XLA_FLAGS"] = "--xla_disable_hlo_passes=constant_folding"
 
+if "--xla_gpu_autotune_level" not in os.environ.get("XLA_FLAGS", ""):
+
+    os.environ["XLA_FLAGS"] = (
+        f"{os.environ['XLA_FLAGS']} --xla_gpu_autotune_level=0"
+    )
+
+    logger.info(
+        """
+        XLA GPU autotuning has been disabled by default (--xla_gpu_autotune_level=0):
+        it dominates cold JAX compile times on GPU (measured up to ~7 minutes for a
+        single fusion) while giving no measurable evaluation speed-up on PyAuto
+        likelihoods.
+
+        To re-enable autotuning, include an explicit --xla_gpu_autotune_level=<n>
+        in the XLA_FLAGS environment variable before running your script — a
+        pre-set level is always respected.
+        """
+    )
+
 jax_enable_x64 = os.environ.get("JAX_ENABLE_X64")
 
 if jax_enable_x64 is None:

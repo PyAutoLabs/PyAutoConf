@@ -35,7 +35,7 @@ def reload_wrapper():
 
 def test_xla_flags_set_when_unset(clean_env):
     reload_wrapper()
-    assert os.environ["XLA_FLAGS"] == CONSTANT_FOLDING
+    assert os.environ["XLA_FLAGS"].startswith(CONSTANT_FOLDING)
 
 
 def test_xla_flags_appended_not_clobbered(clean_env):
@@ -51,7 +51,9 @@ def test_xla_flags_unchanged_when_already_present(clean_env):
     preset = f"--xla_dump_to=/tmp/foo {CONSTANT_FOLDING}"
     clean_env.setenv("XLA_FLAGS", preset)
     reload_wrapper()
-    assert os.environ["XLA_FLAGS"] == preset
+    # constant_folding is not re-appended; only the autotune default is added.
+    assert os.environ["XLA_FLAGS"].startswith(preset)
+    assert os.environ["XLA_FLAGS"].count(CONSTANT_FOLDING) == 1
 
 
 def test_cache_dir_defaulted_when_unset(clean_env):
@@ -92,3 +94,29 @@ def test_min_compile_time_respects_preset_value(clean_env):
 def test_x64_enabled_by_default(clean_env):
     reload_wrapper()
     assert os.environ["JAX_ENABLE_X64"] == "True"
+
+
+AUTOTUNE_OFF = "--xla_gpu_autotune_level=0"
+
+
+def test_autotune_disabled_by_default(clean_env):
+    reload_wrapper()
+    assert AUTOTUNE_OFF in os.environ["XLA_FLAGS"]
+
+
+def test_autotune_preset_level_respected(clean_env):
+    clean_env.setenv("XLA_FLAGS", "--xla_gpu_autotune_level=3")
+    reload_wrapper()
+    flags = os.environ["XLA_FLAGS"]
+    assert "--xla_gpu_autotune_level=3" in flags
+    assert AUTOTUNE_OFF not in flags
+    assert CONSTANT_FOLDING in flags
+
+
+def test_autotune_composes_with_user_flags(clean_env):
+    clean_env.setenv("XLA_FLAGS", "--xla_dump_to=/tmp/foo")
+    reload_wrapper()
+    flags = os.environ["XLA_FLAGS"]
+    assert "--xla_dump_to=/tmp/foo" in flags
+    assert CONSTANT_FOLDING in flags
+    assert AUTOTUNE_OFF in flags
