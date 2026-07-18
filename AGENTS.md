@@ -21,7 +21,7 @@ Canonical boundaries live in `PyAutoBrain/ORGANISM.md`; the full body map
 |-------|------|------|
 | **Mind** | PyAutoMind | Intent, goals, priorities, workflow state; every task starts as a markdown prompt here. |
 | **Brain** | PyAutoBrain | Reasoning/orchestration layer; how work is decomposed and routed; the specialist agents. |
-| **Hands** | PyAutoBuild | Packaging, tagging, notebook generation, PyPI release execution. |
+| **Hands** | PyAutoHands | Packaging, tagging, notebook generation, PyPI release execution. |
 | **Heart** | PyAutoHeart | Health/readiness — the authoritative "is it safe to release?" verdict. |
 | **Memory** | PyAutoMemory | Long-term scientific/software/project knowledge (see science pointer below). |
 | **Gut** | PyAutoGut | Owns the lifecycle of condemned self-material (stale branches, stashes, dead code/tests): holds it as durable, recoverable git refs through a transit window and voids it on a sweep. The storage mirror of Memory (retention vs release). |
