@@ -13,7 +13,7 @@ from pathlib import Path
 
 import yaml
 
-from autoconf.directory_config import RecursiveConfig, YAMLConfig
+from autonerves.directory_config import RecursiveConfig, YAMLConfig
 
 target_path = Path(sys.argv[1])
 

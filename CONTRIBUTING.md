@@ -66,7 +66,7 @@ Contributions are welcome and greatly appreciated!
 
 3. Make your changes and run tests:
     ```
-    python -m pytest test_autoconf/
+    python -m pytest test_autonerves/
     ```
 
 4. Commit, push, and submit a pull request.
