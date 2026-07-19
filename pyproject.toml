@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/PyAutoLabs/PyAutoConf"
+Homepage = "https://github.com/PyAutoLabs/PyAutoNerves"
 
 [tool.setuptools]
 include-package-data = true

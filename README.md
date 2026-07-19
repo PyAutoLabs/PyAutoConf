@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="logo.png" alt="PyAutoConf" width="400">
+  <img src="logo.png" alt="PyAutoNerves" width="400">
 </p>
 
-# PyAutoConf
+# PyAutoNerves
 
 🧬 **PyAutoScientist → <https://github.com/PyAutoLabs/PyAutoScientist>** — this repo is one organ of the PyAuto organism.
 
 📖 **Full documentation → <https://pyautoscientist.readthedocs.io>** — the whole PyAutoScientist organism, including how to fork and run your own.
 
-**PyAutoConf** (package `autonerves`) is the configuration, serialization, and
+**PyAutoNerves** (package `autonerves`) is the configuration, serialization, and
 I/O foundation of the [PyAuto](https://github.com/PyAutoLabs) ecosystem. It
 provides a layered configuration system with workspace overrides, dict / JSON /
 CSV serialization of arbitrary objects, and FITS I/O.
