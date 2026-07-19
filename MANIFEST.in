@@ -8,5 +8,5 @@ prune dist
 recursive-exclude *.egg-info *
 include requirements.txt
 
-global-exclude test_autoconf
-recursive-exclude test_autoconf *
+global-exclude test_autonerves
+recursive-exclude test_autonerves *

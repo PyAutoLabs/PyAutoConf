@@ -5,7 +5,7 @@ Generate prior configuration for all classes in a package, recursively
 
 from sys import argv
 
-from autoconf.json_prior import generate
+from autonerves.json_prior import generate
 
 if __name__ == "__main__":
     try:

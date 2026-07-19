@@ -1,7 +1,7 @@
 # Copilot Coding Agent Instructions
 
 You are working on **PyAutoConf**, the configuration, serialization and I/O
-foundation of the PyAuto ecosystem (package `autoconf`).
+foundation of the PyAuto ecosystem (package `autonerves`).
 
 The canonical, agent-agnostic instructions for this repo live in **`AGENTS.md`** at
 the repository root — build and test commands, architecture, the base-layer config

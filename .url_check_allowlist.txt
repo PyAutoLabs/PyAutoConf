@@ -10,4 +10,4 @@
 http://geekfeminism.wikia.com/wiki/Conference_anti-harassment/Policy  # CODE_OF_CONDUCT.md:305
 
 # Internal PyAuto docs — pages renamed, need editorial fix
-https://pyautofit.readthedocs.io/en/latest/general/adding_a_model_component.html  # autoconf/directory_config.py:235
+https://pyautofit.readthedocs.io/en/latest/general/adding_a_model_component.html  # autonerves/directory_config.py:235

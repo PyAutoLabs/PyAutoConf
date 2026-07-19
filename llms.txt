@@ -1,6 +1,6 @@
 # PyAutoConf
 
-> PyAutoConf (package `autoconf`) is the foundational configuration, serialization and I/O layer of the PyAuto ecosystem — layered config with overrides, dict/JSON/FITS serialization, JSON priors, and shared utilities every other library inherits. This file is a signpost: it points you to the right resource by intent — see where it is used, or work on the library itself.
+> PyAutoConf (package `autonerves`) is the foundational configuration, serialization and I/O layer of the PyAuto ecosystem — layered config with overrides, dict/JSON/FITS serialization, JSON priors, and shared utilities every other library inherits. This file is a signpost: it points you to the right resource by intent — see where it is used, or work on the library itself.
 
 ## Where it's used
 

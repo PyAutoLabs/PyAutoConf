@@ -9,5 +9,5 @@ jobs:
   unittest:
     uses: PyAutoLabs/PyAutoHeart/.github/workflows/lib-tests.yml@main
     with:
-      package: autoconf
+      package: autonerves
     secrets: inherit
