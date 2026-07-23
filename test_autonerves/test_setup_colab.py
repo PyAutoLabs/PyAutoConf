@@ -128,7 +128,7 @@ class TestCloneWorkspace:
 
     def test_clones_release_tag_when_available(self, tmp_path):
         target = str(tmp_path / "ws")
-        with mock.patch.object(setup_colab, "_installed_version", return_value="2026.7.6.649"):
+        with mock.patch.object(setup_colab, "_installed_version", return_value="2026.7.22.1"):
             with mock.patch.object(
                 subprocess, "run", return_value=mock.Mock(returncode=0)
             ) as run:
@@ -136,7 +136,7 @@ class TestCloneWorkspace:
         run.assert_called_once()
         args = run.call_args[0][0]
         assert args[:4] == ["git", "clone", "--depth", "1"]
-        assert ["--branch", "2026.7.6.649"] == args[4:6]
+        assert ["--branch", "2026.7.22.1"] == args[4:6]
 
     def test_falls_back_to_default_branch_when_tag_missing(self, tmp_path):
         target = str(tmp_path / "ws")
