@@ -1,5 +1,3 @@
-import os
-import shutil
 from pathlib import Path
 
 import pytest
@@ -41,28 +39,18 @@ class TestLabel:
             label_config["superscript"].family(MockClass)
 
 
-BAD_PATH = "bad/path"
-
-
-def remove_path():
-    shutil.rmtree(
-        BAD_PATH,
-        ignore_errors=True,
-    )
-
-
 @pytest.fixture(name="config")
 def make_config():
     return conf.Config()
 
 
-def test_path_does_not_exist(config):
-    remove_path()
+def test_path_does_not_exist(config, tmp_path):
     with pytest.raises(ConfigException):
-        config.push(BAD_PATH)
+        config.push(str(tmp_path / "does_not_exist"))
 
 
-def test_path_empty(config):
-    os.makedirs(BAD_PATH, exist_ok=True)
+def test_path_empty(config, tmp_path):
+    empty = tmp_path / "empty"
+    empty.mkdir()
     with pytest.raises(ConfigException):
-        config.push(BAD_PATH)
+        config.push(str(empty))
